@@ -1,14 +1,16 @@
 const express = require('express')
 const router = express.Router()
-const authenticateToken = require('../middlewares/auth')
-const commentController = require('../controllers/commentController')
+const commentController = require('../controllers/CommentController')
+const validateApi = require('../middlewares/ValidateApi')
+const authenticateToken = require('../middlewares/Auth')
 
 router
   .route('/:postId/comments')
   .get(commentController.getCommentByPost)
-  .post(authenticateToken, commentController.addComment)
+  .post(authenticateToken, validateApi, commentController.addComment)
 router
   .route('/:postId/comments/:commentId')
+  .get(commentController.getCommentById)
   .put(authenticateToken, commentController.updateComment)
   .delete(authenticateToken, commentController.deleteComment)
 

@@ -1,9 +1,11 @@
 import { useFormik } from 'formik'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import { addPostAPI } from '../../api/apiHandler'
 import { PostAdd } from '../../components/posts'
 
 const AddPost = ({ user }) => {
+  const navigate = useNavigate()
 
   const postData = useFormik({
     initialValues: {
@@ -28,8 +30,9 @@ const AddPost = ({ user }) => {
       addPostAPI(values)
         .then(() => {
           toast.success('Post Added Successfully')
+          navigate('/users/posts')
         })
-        .catch(err => toast.error(err.message))
+        .catch(err => toast.error(err.response.data.message))
 
       resetForm({ values: '' })
     }

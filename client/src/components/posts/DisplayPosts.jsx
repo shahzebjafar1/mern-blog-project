@@ -1,3 +1,4 @@
+import Spinner from '../spinner/Index'
 import PostCard from './PostCard'
 
 const DisplayPosts = props => {
@@ -13,9 +14,7 @@ const DisplayPosts = props => {
             )
           })
         ) : (
-          <div className='d-flex justify-content-center align-items-center min-vh-75'>
-            <div className='spinner-border text-primary ' role='status'></div>
-          </div>
+          <Spinner />
         )}
       </div>
     </div>

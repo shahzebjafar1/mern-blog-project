@@ -1,5 +1,5 @@
-const Comment = require('../../models/commentModel')
-const AppError = require('../../utils/appError')
+const Comment = require('../../models/CommentModel')
+const AppError = require('../../utils/AppError')
 
 const getAllComments = async (req, res, next) => {
   try {
@@ -9,22 +9,37 @@ const getAllComments = async (req, res, next) => {
       data: comments
     })
   } catch (err) {
-    res.status(404).json({
-      error: err?.errors
-    })
+    next(err)
   }
 }
 
 const getCommentByPost = async (req, res, next) => {
   try {
     const comments = await Comment.find({ post: req.params.postId })
+    if (!comments) {
+      return next(new AppError('No Comment Found', 404))
+    }
     res.status(200).json({
       message: `Comments For Post: ${req.params.postId}`,
       commentCount: comments?.length,
-      data: comments
+      comments: comments
     })
-  } catch (error) {
-    res.status(404).json(error)
+  } catch (err) {
+    next(err)
+  }
+}
+
+const getCommentById = async (req, res, next) => {
+  try {
+    const comment = await Comment.findById( req.params.commentId )
+    if (!comment) {
+      return next(new AppError('No Comment Found', 404))
+    }
+    res.status(200).json({
+      comment: comment
+    })
+  } catch (err) {
+    next(err)
   }
 }
 
@@ -40,41 +55,45 @@ const addComment = async (req, res, next) => {
       message: 'Comment Added Successfully',
       data: newComment
     })
-  } catch (error) {
-    res.status(400).json(error)
+  } catch (err) {
+    next({ ...err, name: err.name })
   }
 }
 
 const updateComment = async (req, res, next) => {
   try {
-    const updateComment = await Comment.findByIdAndUpdate(
-      req.params.postId,
+    const updatedComment = await Comment.findByIdAndUpdate(
+      req.params.commentId,
       { body: req.body.body },
       {
         new: true,
-        runValidators: false
+        runValidators: true
       }
     )
+    if (!updatedComment) {
+      return next(new AppError('No Comment Found', 404))
+    }
     res.status(200).json({
       message: 'Comment Updated Successfully',
-      data: updateComment
+      data: updatedComment
     })
-  } catch (error) {
-    res.status(400).json(error)
+  } catch (err) {
+    next({ ...err, name: err.name })
   }
 }
 
 const deleteComment = async (req, res, next) => {
   try {
-    if (!(await Comment.findByIdAndDelete(req.params.postId))) {
+    if (!(await Comment.findByIdAndDelete(req.params.commentId))) {
       return next(new AppError("Comment Doesn't found", 404))
     }
-    res.status(204).json({
+    res.status(200).json({
       message: 'Comment Deleted Successfully'
     })
   } catch (err) {
     console.log(err)
+    next(err)
   }
 }
 
-module.exports = { getAllComments, getCommentByPost, addComment, updateComment, deleteComment }
+module.exports = { getAllComments, getCommentByPost,getCommentById, addComment, updateComment, deleteComment }

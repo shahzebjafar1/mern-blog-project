@@ -3,33 +3,31 @@ import { addCommentsAPI } from '../../api/apiHandler'
 import { validateComment } from '../../utils/validateForm'
 import AddComments from '../../components/comments/AddComments'
 import toast from 'react-hot-toast'
+import verifyUser from '../../utils/verifyUser'
 
 const AddComment = props => {
-  const user = props.user;
+  const user = verifyUser()
   const commentData = useFormik({
     initialValues: {
+      post: props.id,
       body: '',
-      userId: user?.id,
-      postId: props.id
+      author: user?._id
     },
     validate: validateComment,
     onSubmit: (values, { resetForm }) => {
-      addCommentsAPI(values)
+      addCommentsAPI(props.id, values)
         .then(() => {
-          props.checkComment(prev => !prev)
-          toast.success("comment Added Successfully")
+          props.setIsCommentAdded(prev => !prev)
+          setTimeout(()=>toast.success('comment Added Successfully'),1000)
+
         })
-        .catch(err => toast.error(err.message))
+        .catch(err => toast.error(err))
 
       resetForm({ values: '' })
     }
   })
 
-  return (
-
-    <AddComments commentData={commentData} />
-
-  )
+  return <AddComments commentData={commentData} />
 }
 
 export default AddComment

@@ -6,11 +6,13 @@ const postSchema = new mongoose.Schema(
       type: String,
       trim: true,
       lowercase: true,
+      minLength:5,
       required: [true, `Please provide a post title`]
     },
     body: {
       type: String,
       lowercase: true,
+      minLength:50,
       required: [true, 'Please provide a post body']
     },
     author: {

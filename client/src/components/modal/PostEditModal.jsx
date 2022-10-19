@@ -1,6 +1,6 @@
 
 
-const PostEditModal = (props) => {
+const PostEditModal = ({postData}) => {
   return (
     <div>
       {/* Button trigger modal */}
@@ -37,7 +37,7 @@ const PostEditModal = (props) => {
                 <span aria-hidden='true'>×</span>
               </button>
             </div>
-            <form onSubmit={props.postData.handleSubmit}>
+            <form onSubmit={postData.handleSubmit}>
               <div className='modal-body'>
                 <div className='m-5 '>
                   <div className=' mb-3'>
@@ -49,12 +49,12 @@ const PostEditModal = (props) => {
                       name='title'
                       className='form-control'
                       id='exampleFormControlInput1'
-                      value={props.postData.values.title}
-                      onChange={props.postData.handleChange}
-                      onBlur={props.postData.handleBlur}
+                      value={postData.values.title}
+                      onChange={postData.handleChange}
+                      onBlur={postData.handleBlur}
                     />
-                    {props.postData.errors.title && props.postData.touched.title ? (
-                      <p className='text-danger'>{props.postData.errors.title}</p>
+                    {postData.errors.title && postData.touched.title ? (
+                      <p className='text-danger'>{postData.errors.title}</p>
                     ) : null}
                   </div>
                   <div className='mb-3'>
@@ -66,12 +66,12 @@ const PostEditModal = (props) => {
                       className='form-control'
                       id='pbody'
                       rows={5}
-                      value={props.postData.values.body}
-                      onChange={props.postData.handleChange}
-                      onBlur={props.postData.handleBlur}
+                      value={postData.values.body}
+                      onChange={postData.handleChange}
+                      onBlur={postData.handleBlur}
                     />
-                    {props.postData.errors.body && props.postData.touched.body ? (
-                      <p className='text-danger'> {props.postData.errors.body}</p>
+                    {postData.errors.body && postData.touched.body ? (
+                      <p className='text-danger'> {postData.errors.body}</p>
                     ) : null}
                   </div>
                 </div>

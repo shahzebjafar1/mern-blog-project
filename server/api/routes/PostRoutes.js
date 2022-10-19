@@ -1,9 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const postController = require('../controllers/postsController')
-const authenticateToken = require('../middlewares/auth')
+const postController = require('../controllers/PostsController')
+const authenticateToken = require('../middlewares/Auth')
+const validateApi=require('../middlewares/ValidateApi')
 
-router.route('/').get(postController.getAllPosts).post(authenticateToken, postController.addPost)
+
+
+router.route('/').get(postController.getAllPosts).post(authenticateToken,validateApi, postController.addPost)
 // TODO: Check for following Route
 router.route('/users').post(authenticateToken,postController.getPostsByUser)
 

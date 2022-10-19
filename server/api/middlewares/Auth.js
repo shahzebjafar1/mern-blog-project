@@ -1,9 +1,8 @@
 const jwt = require('jsonwebtoken')
-const User = require('../../models/userModel')
-const AppError = require('../../utils/appError')
+const User = require('../../models/UserModel')
+const AppError = require('../../utils/AppError')
 
 const authenticateToken = async (req, res, next) => {
-
   let token
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1]

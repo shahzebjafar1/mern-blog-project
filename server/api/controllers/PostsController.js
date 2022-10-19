@@ -1,7 +1,7 @@
-const Post = require('../../models/postModel')
-const AppError = require('../../utils/appError')
+const Post = require('../../models/PostModel')
+const AppError = require('../../utils/AppError')
 
-const addPost = async (req, res) => {
+const addPost = async (req, res, next) => {
   try {
     const newPost = await Post.create({
       title: req.body.title,
@@ -9,14 +9,12 @@ const addPost = async (req, res) => {
       author: req.body.author
     })
 
-    res.status(200).json({
-      message: 'Post Added',
+    res.status(201).json({
+      message: 'Post Added Successfully',
       data: newPost
     })
   } catch (err) {
-    res.status(400).json({
-      error: err?.errors
-    })
+    next({ ...err, name: err.name })
   }
 }
 
@@ -28,42 +26,40 @@ const getAllPosts = async (req, res) => {
       posts: posts
     })
   } catch (err) {
-    res.status(404).json({
-      error: err?.errors
-    })
+    res.status(204).send(err)
   }
 }
 
-const getPostById = async (req, res) => {
+const getPostById = async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.postId).populate('comment')
+    if (!post) {
+      return next(new AppError('Post Not Found', 404))
+    }
     res.status(200).json({
       post: post
     })
   } catch (err) {
-    res.status(404).json({
-      error: err?.errors
-    })
+    next({ ...err, name: err.name })
   }
 }
 
-const getPostsByUser = async (req, res) => {
+const getPostsByUser = async (req, res, next) => {
   try {
     const posts = await Post.find({ author: req.body.userId })
-    console.log(posts)
-
+    if (!posts) {
+      return next(new AppError('No Post found', 404))
+    }
     res.status(200).json({
       posts_count: posts.length,
       posts: posts
     })
   } catch (err) {
-    res.status(404).json({
-      message: 'Post not found'
-    })
+    next(err)
   }
 }
 
-const updatePost = async (req, res) => {
+const updatePost = async (req, res, next) => {
   try {
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
@@ -76,29 +72,28 @@ const updatePost = async (req, res) => {
         runValidators: true
       }
     )
+    if (!updatedPost) {
+      return next(new AppError('Post Not Found', 404))
+    }
     res.status(200).json({
       message: 'Post Updated Successfully',
       data: updatedPost
     })
   } catch (err) {
-    res.status(400).json({
-      error: err
-    })
+    next(err)
   }
 }
 
-const deletePost = async (req, res) => {
+const deletePost = async (req, res, next) => {
   try {
     if (!(await Post.findByIdAndDelete(req.params.postId))) {
-      throw new Error("Post Doesn't found")
+      return next(new AppError('Post Not Found', 404))
     }
-    res.status(204).json({
+    res.status(200).json({
       message: 'Post Deleted Successfully'
     })
   } catch (err) {
-    res.status(404).json({
-      error: err.message
-    })
+    next(err)
   }
 }
 

@@ -33,39 +33,42 @@ const Header = props => {
           >
             <span className='navbar-toggler-icon' />
           </button>
-          <div className='collapse navbar-collapse' id='navbarSupportedContent'>
-            <ul className='navbar-nav me-auto mb-2 mb-lg-0'>
-              <li className='nav-item'>
-                <Link to='/posts' className='nav-link active' aria-current='page' href='#'>
-                  All Posts
+          {user ? (
+            <div className='collapse navbar-collapse' id='navbarSupportedContent'>
+              <ul className='navbar-nav me-auto mb-2 mb-lg-0'>
+                <li className='nav-item'>
+                  <Link to='/posts' className='nav-link active' aria-current='page' href='#'>
+                    All Posts
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link to={'/users/posts/'} className='nav-link' href='#'>
+                    My Posts
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link to={`/users/${user?._id}`} className='nav-link' href='#'>
+                    My Profile
+                  </Link>
+                </li>
+              </ul>
+              <form>
+                <Link to='/posts/add' className='btn btn-outline-success mx-3' type='submit'>
+                  Add Post
                 </Link>
-              </li>
-              <li className='nav-item'>
-                <Link to={'/users/posts/'} className='nav-link' href='#'>
-                  My Posts
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link to={`/users/${user?._id}`} className='nav-link' href='#'>
-                  My Profile
-                </Link>
-              </li>
-            </ul>
-            <form>
-              <Link to='/posts/add' className='btn btn-outline-success mx-3' type='submit'>
-                Add Post
-              </Link>
-              {user ? (
+
                 <Link to='' className='btn btn-outline-danger' type='button' onClick={handleLogout}>
                   Logout
                 </Link>
-              ) : (
-                <Link to='/users/login' className='btn btn-outline-primary ' type='button'>
-                  Login
-                </Link>
-              )}
-            </form>
-          </div>
+              </form>
+            </div>
+          ) : (
+            <div>
+              <Link to='/users/login' className='btn btn-outline-primary ' type='button'>
+                Login
+              </Link>
+            </div>
+          )}
         </div>
       </nav>
     </div>

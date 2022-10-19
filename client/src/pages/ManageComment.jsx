@@ -4,26 +4,26 @@ import { Link } from 'react-router-dom'
 import { deleteCommentsAPI, editCommentsAPI } from '../api/apiHandler'
 
 const ManageComment = props => {
-  const [commentBody, setCommentBody] = useState(props.comment?.body)
+  const [commentBody, setCommentBody] = useState(props?.comment?.body)
 
   const updateComment = () => {
-    editCommentsAPI(props.comment.id, {
+    editCommentsAPI(props.comment.post, props.comment._id, {
       body: commentBody,
-      userId: props.comment.userId,
-      postId: props.comment.postId
+      author: props.comment.author,
+      post: props.comment.post
     })
       .then(() => {
-        props.checkComment(prev => !prev)
-        toast.success('Comment Updated Successfully')
+        props.setIsCommentAdded(prev => !prev)
+        setTimeout(()=> toast.success('Comment Updated Successfully'),1000)
       })
-      .catch(err => toast.error(err.message))
+      .catch(err => toast.error(err))
   }
 
   const deleteCommentHandler = () => {
-    deleteCommentsAPI(props.comment.id)
+    deleteCommentsAPI(props.comment.post, props.comment.id)
       .then(() => {
-        props.checkComment(prev => !prev)
-        toast.success('Comment Deleted Successfully')
+        props.setIsCommentAdded(prev => !prev)
+        setTimeout(()=> toast.success('Comment Deleted Successfully'),1000)
       })
       .catch(err => toast.error(err.message))
   }
@@ -43,7 +43,7 @@ const ManageComment = props => {
           <div className='modal-content'>
             <div className='modal-header'>
               <h5 className='modal-title' id='exampleModalCenterTitle'>
-                Modal title
+                Update Comment
               </h5>
               <button
                 type='button'

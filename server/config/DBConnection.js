@@ -2,7 +2,7 @@ const dotenv = require('dotenv')
 dotenv.config({ path: './config.env' })
 const mongoose = require('mongoose')
 
-const DB = process.env.DATABASE_URI.replace('<password>', process.env.DATABASE_PASSWORD)
+const DB = process.env.DATABASE_URI?.replace('<password>', process.env.DATABASE_PASSWORD)
 
 const db = mongoose
   .connect(DB, {
@@ -13,6 +13,6 @@ const db = mongoose
     family: 4 // Use IPv4, skip trying IPv6
   })
   .then(con => console.log('DB Connected Successfully'))
-  .catch(err => console.log(err))
+
 
 module.exports = db

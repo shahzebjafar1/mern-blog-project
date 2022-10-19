@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const uniqueValidator = require('mongoose-unique-validator')
 const bcrypt = require('bcryptjs')
 
 const userSchema = new mongoose.Schema({
@@ -13,18 +12,14 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     lowercase: true,
-    unique: true,
-    required: [true, 'Please provide a email'],
-    match: [/\S+@\S+\.\S+/, 'Please provide a valid email']
+    trim: true,
+    required: [true, 'Please provide an email address'],
+    match: [/\S+@\S+\.\S+/, 'Please provide a valid email address']
   },
-  password: { type: String, minLength: 6, required: [true, 'Please provide a password'] },
-  token: { type: String }
+  password: { type: String, minLength: 6, required: [true, 'Please provide a password'] }
 })
 
-// mongoose middleware/hooks
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next()
-
   try {
     this.password = await bcrypt.hash(this.password, 12)
   } catch (err) {
@@ -33,23 +28,10 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-// instance Method
 userSchema.methods.checkPassword = async function (userSignInPass, userOriginalPass) {
   return await bcrypt.compare(userSignInPass, userOriginalPass)
 }
 
-userSchema.plugin(uniqueValidator, { message: 'is already used' })
-
 const User = mongoose.model('Users', userSchema)
 
 module.exports = User
-
-// userSchema.pre('save', async function (next) {
-//   console.log(this)
-//   next()
-// })
-
-// userSchema.post('save', async function (doc, next) {
-//   console.log(doc.id)
-//   next()
-// })
