@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const userRoutes = require('./api/routes/UserRoutes')
 const postRoutes = require('./api/routes/PostRoutes')
 const commentRoutes = require('./api/routes/CommentRoutes')
@@ -10,6 +11,8 @@ require('./config/DBConnection')
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use(express.static(path.join(__dirname, '/client/build')))
+
 app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/posts', postRoutes)
 app.use('/api/v1/posts', commentRoutes)
@@ -20,6 +23,9 @@ app.all('*', (req, res, next) => {
 
 app.use(globalErrorHandler)
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/client/build', 'index.html'))
+})
 
 app.listen(process.env.PORT, () => {
   console.log('App running at :', process.env.PORT)
