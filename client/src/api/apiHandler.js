@@ -1,9 +1,9 @@
 import axiosBase from "../utils/axiosapi"
-import { getAllPostsUrl } from "../config/config_urls"
 
 //* Posts
 // Get
-export const getAllPostsAPI = () => axiosBase.get(getAllPostsUrl);
+export const getAllPostsAPI = () => axiosBase.get('/api/v1/posts');
+export const getPostByIdAPI = (id) => axiosBase.get(`/api/v1/posts/${id}`);
 export const getUserPostsAPI = (id) => axiosBase.post(`/api/v1/posts/users`,id);
 // Post
 export const addPostAPI = (data) => axiosBase.post('/api/v1/posts', data)

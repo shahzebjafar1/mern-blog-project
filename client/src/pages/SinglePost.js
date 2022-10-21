@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { getCommentsAPI } from '../api/apiHandler'
+import { getCommentsAPI, getPostByIdAPI } from '../api/apiHandler'
 import EditPost from '../containers/posts/EditPost'
 import ManageComment from './ManageComment'
 import NewComment from '../containers/comments/AddComment'
@@ -19,8 +19,7 @@ const SinglePost = props => {
   const { id } = useParams()
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/api/v1/posts/${id}`)
+    getPostByIdAPI(id)
       .then(res => {
         setPost(res.data.post)
         setComments(res.data.post.comment)
