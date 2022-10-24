@@ -85,15 +85,23 @@ const ManageComment = props => {
       </div>
 
       <div className='d-flex'>
+        {
+          props?.deleteComment ? <Link to='' className='text-danger mx-3' onClick={deleteCommentHandler}>
+          Delete
+        </Link> :
+        <>
         <Link to='' className=' mx-3' data-toggle='modal' data-target='#commentModal'>
           Edit
         </Link>
         <Link to='' className='text-danger mx-3' onClick={deleteCommentHandler}>
           Delete
         </Link>
+        </>
+        }
       </div>
     </div>
   )
 }
 
 export default ManageComment
+

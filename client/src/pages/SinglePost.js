@@ -1,7 +1,6 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { getCommentsAPI, getPostByIdAPI } from '../api/apiHandler'
+import { getCommentsAPI,getPostByIdAPI } from '../api/apiHandler'
 import EditPost from '../containers/posts/EditPost'
 import ManageComment from './ManageComment'
 import NewComment from '../containers/comments/AddComment'
@@ -77,10 +76,11 @@ const SinglePost = props => {
                       <p>{curr?.body}</p>
                       <p>By: {curr?.author?.userName?.toUpperCase() || 'Nil'}</p>
                     </div>
-                    {user?._id && user?._id === curr.author._id ? (
+                    {(user?._id === curr.author._id) || user?._id === post?.author ? (
                       <ManageComment
                         key={curr.id}
                         comment={curr}
+                        deleteComment={!(user?._id === curr.author._id) && (user?._id === post?.author)}
                         setIsCommentAdded={setIsCommentAdded}
                       />
                     ) : (
@@ -101,3 +101,4 @@ const SinglePost = props => {
 }
 
 export default SinglePost
+
